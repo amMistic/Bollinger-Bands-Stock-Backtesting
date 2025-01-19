@@ -1,3 +1,4 @@
+from datetime import datetime 
 from pathlib import Path
 from typing import List
 import yfinance as yf
@@ -33,7 +34,14 @@ class DataIngestion:
         self.validate_args()
         
         for ticker in self.tickers:
-            data = yf.download([ticker], start=self.start_date, end=self.end_date, interval=self.interval)  
+            data = yf.download([ticker], start=self.start_date, end=self.end_date, interval=self.interval) 
+            
+            # make separate directory to save the fetch stocks depends on user
+            UID = datetime.now().strftime('%d%m%Y%H')
+            dir_path = f'data/user_{UID}'
+            os.makedirs(dir_path,exist_ok=True)
+            
+            self.save_dir = dir_path 
             file_path = os.path.join(self.save_dir,Path(f'{ticker}.csv'))
             data.to_csv(file_path)
             print(f'Fetched data saved sucessfully at {file_path} of ticker : {ticker}')

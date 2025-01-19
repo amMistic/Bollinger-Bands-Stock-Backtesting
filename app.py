@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from typing import List
 from src.process import process
@@ -48,16 +49,26 @@ def main():
             st.session_state['display'] = True
 
     if st.session_state['display']:
-        select_figure = st.slider('Select Stock Index', 0, len(selection_box)-1)
-        
-        st.subheader('Trades:\n')
         trades = st.session_state['result'][0]
-        st.dataframe(trades[select_figure])
-        
-        st.subheader('Visuals for each selected stocks:\n')
         graphs = st.session_state['result'][1]
-        st.plotly_chart(graphs[select_figure])
         
+        if len(selection_box) > 2:
+            select_figure = st.slider('Select Stock Index', 0, len(selection_box)-1)
+            
+            st.subheader('Trades:\n')
+            st.dataframe(trades[select_figure])
+            
+            st.subheader('Visuals for each selected stocks:\n')
+            st.plotly_chart(graphs[select_figure])
+        else:
+            st.subheader('Trades:\n')
+            st.dataframe(trades[0])
+            
+            st.subheader('Visuals for each selected stocks:\n')
+            st.plotly_chart(graphs[0])
+            
+    
         
 if __name__ == '__main__':
     main()
+    
